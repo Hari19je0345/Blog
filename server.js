@@ -1,13 +1,18 @@
 const express = require('express')
+const dotenv = require('dotenv').config()
 const mongoose = require('mongoose')
 const Article = require('./models/article')
 const articleRouter = require('./routes/articles')
 const methodOverride = require('method-override')
 const app = express()
 
-const port = process.env.PORT || 5000
+const port = 5000
 
-mongoose.connect('mongodb://127.0.0.1:27017/blog')
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser:true,
+  useUnifiedTopology:true,
+})
+  // 'mongodb://127.0.0.1:27017/blog')
 const db = mongoose.connection
 db.on('error',(error)=>console.error(error))
 db.once('open',()=>console.log('Connected to Database'))
@@ -23,4 +28,4 @@ app.get('/', async (req, res) => {
 
 app.use('/articles', articleRouter)
 
-app.listen(port)
+app.listen(process.env.PORT || port)
